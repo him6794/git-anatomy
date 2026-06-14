@@ -1,0 +1,66 @@
+[package]
+name = "git-anatomy"
+version = "0.1.0"
+edition = "2021"
+description = "Predict the blast radius of code changes via AST + Git temporal coupling analysis"
+license = "MIT"
+repository = "https://github.com/him6794/git-anatomy"
+keywords = ["git", "ast", "temporal-coupling", "blast-radius", "static-analysis"]
+categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "git-anatomy"
+path = "src/main.rs"
+
+[dependencies]
+# CLI argument parsing (derive macro style)
+clap = { version = "4", features = ["derive", "color", "suggestions"] }
+
+# Git repository access (direct .git reading, NO system git calls)
+git2 = { version = "0.20", default-features = false }
+
+# AST-based code parsing
+tree-sitter = "0.24"
+tree-sitter-rust = "0.23"
+tree-sitter-javascript = "0.23"
+tree-sitter-typescript = "0.23"
+tree-sitter-python = "0.23"
+tree-sitter-go = "0.23"
+tree-sitter-java = "0.23"
+tree-sitter-c = "0.23"
+
+# In-memory SQL aggregation engine
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+# Terminal UI for interactive visualization
+ratatui = "0.29"
+crossterm = "0.28"
+
+# Error handling
+anyhow = "1"
+thiserror = "2"
+
+# Logging / diagnostics
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Terminal colors & formatting
+colored = "3"
+
+# Progress indicators
+indicatif = "0.17"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Time handling
+chrono = "0.4"
+
+# Unicode handling
+unicode-width = "0.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+strip = true
