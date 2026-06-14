@@ -94,6 +94,7 @@ pub struct App {
 #[derive(Debug, Clone)]
 pub struct ListState {
     pub selected: Option<usize>,
+    #[allow(dead_code)]
     pub offset: usize,
 }
 

@@ -206,6 +206,7 @@ fn draw_coupling_map(f: &mut Frame, app: &App, area: Rect) {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn draw_file_coupling(
     f: &mut Frame,
     app: &App,
@@ -297,6 +298,7 @@ fn draw_file_coupling(
     f.render_widget(paragraph, area);
 }
 
+#[allow(clippy::too_many_arguments)]
 fn draw_function_coupling(
     f: &mut Frame,
     app: &App,
@@ -319,7 +321,7 @@ fn draw_function_coupling(
         let fg = if is_selected { COLOR_TEXT } else { COLOR_SUBTEXT };
 
         let line = Line::from(vec![
-            Span::styled(format!(" ƒ "), Style::default().fg(COLOR_TEAL).bg(bg)),
+            Span::styled(" ƒ ".to_string(), Style::default().fg(COLOR_TEAL).bg(bg)),
             Span::styled(
                 format!("{:<30}", truncate_str(&func.name, 30)),
                 Style::default().fg(fg).add_modifier(Modifier::BOLD).bg(bg),

@@ -90,6 +90,7 @@ pub fn build_call_graph(
 }
 
 /// Find all functions that directly call a target function.
+#[allow(dead_code)]
 pub fn find_callers_of(
     target_func: &str,
     edges: &[CallEdge],
@@ -101,6 +102,7 @@ pub fn find_callers_of(
 }
 
 /// Find all functions called by a target function.
+#[allow(dead_code)]
 pub fn find_callees_of(
     target_func: &str,
     target_file: &str,
@@ -114,6 +116,7 @@ pub fn find_callees_of(
 
 /// Find all functions in the same file that have a static dependency on
 /// the target function (either calling it or being called by it).
+#[allow(dead_code)]
 pub fn find_static_dependencies(
     target_func: &str,
     target_file: &str,

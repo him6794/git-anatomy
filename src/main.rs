@@ -8,7 +8,7 @@ use clap::{Parser, Subcommand};
 use colored::Colorize;
 use indicatif::{ProgressBar, ProgressStyle};
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 mod analyzer;
 mod db;
@@ -178,7 +178,7 @@ fn main() -> Result<()> {
 // ─── check ────────────────────────────────────────────────────────────────────
 
 fn check_command(
-    repo_path: &PathBuf,
+    repo_path: &Path,
     file: &str,
     line: Option<u32>,
     threshold: f64,
@@ -354,7 +354,7 @@ fn check_command(
 
 // ─── scan ─────────────────────────────────────────────────────────────────────
 
-fn scan_command(repo_path: &PathBuf, max_commits: usize, branch: &str) -> Result<()> {
+fn scan_command(repo_path: &Path, max_commits: usize, branch: &str) -> Result<()> {
     print_header(&format!("Scanning: {}", repo_path.display()));
     println!("  branch={}, max_commits={}", branch, if max_commits == 0 { "all".to_string() } else { max_commits.to_string() });
     println!();
@@ -406,14 +406,14 @@ fn scan_command(repo_path: &PathBuf, max_commits: usize, branch: &str) -> Result
         .cloned()
         .collect();
 
-    source_pairs.sort_by(|a, b| b.co_commit_count.cmp(&a.co_commit_count));
+    source_pairs.sort_by_key(|b| std::cmp::Reverse(b.co_commit_count));
 
     let display_pairs: Vec<db::CoupledPair> = if source_pairs.is_empty() {
         println!("  No source-only pairs found; showing all.");
         let mut fallback: Vec<db::CoupledPair> = top_pairs.into_iter()
             .filter(|p| !is_noise_file(&p.file_a) && !is_noise_file(&p.file_b))
             .collect();
-        fallback.sort_by(|a, b| b.co_commit_count.cmp(&a.co_commit_count));
+        fallback.sort_by_key(|b| std::cmp::Reverse(b.co_commit_count));
         fallback.into_iter().take(10).collect()
     } else {
         source_pairs.into_iter().take(10).collect()
@@ -478,8 +478,8 @@ fn scan_command(repo_path: &PathBuf, max_commits: usize, branch: &str) -> Result
             println!("  No function-level data available.");
         } else {
             println!(
-                "  {:<4} {:<40} {:<30} {}",
-                "#", "Function", "File", "Commits"
+                "  {:<4} {:<40} {:<30} Commits",
+                "#", "Function", "File"
             );
             println!("  {}", "-".repeat(85));
 
@@ -507,11 +507,11 @@ fn scan_command(repo_path: &PathBuf, max_commits: usize, branch: &str) -> Result
     Ok(())
 }
 
-fn tui_command(repo_path: &PathBuf) -> Result<()> {
+fn tui_command(repo_path: &Path) -> Result<()> {
     tui::run_tui(repo_path)
 }
 
-fn stats_command(repo_path: &PathBuf) -> Result<()> {
+fn stats_command(repo_path: &Path) -> Result<()> {
     print_header(&format!("Statistics: {}", repo_path.display()));
 
     let db_path = repo_path.join(".git-anatomy/coupling.db");
@@ -567,14 +567,14 @@ fn display_coupling_results(
     println!("  Coupled to {}", target_file.bold());
     println!();
     println!(
-        "  {:<4} {:<50} {:>12} {:>10} {:>8} {}",
-        "#", "File", "Confidence", "Co-changes", "Static?", "Risk"
+        "  {:<4} {:<50} {:>12} {:>10} {:>8} Risk",
+        "#", "File", "Confidence", "Co-changes", "Static?"
     );
     println!("  {}", "-".repeat(100));
 
     for (i, result) in results.iter().enumerate() {
         let confidence_pct = result.confidence * 100.0;
-        let (risk_label, risk_display) = classify_display(confidence_pct);
+        let (_risk_label, risk_display) = classify_display(confidence_pct);
 
         let confidence_display = format_confidence(confidence_pct);
 
@@ -629,8 +629,8 @@ fn display_function_coupling_results(
         .all(|f| f.function_name == "(file-level)");
 
     println!(
-        "  {:<4} {:<30} {:<30} {:>10} {:>8} {:>8} {}",
-        "#", "Entity", "File", "Confid.", "Static", "Co-chg", "Risk"
+        "  {:<4} {:<30} {:<30} {:>10} {:>8} {:>8} Risk",
+        "#", "Entity", "File", "Confid.", "Static", "Co-chg"
     );
     println!("  {}", "-".repeat(120));
 

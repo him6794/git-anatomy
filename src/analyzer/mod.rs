@@ -31,11 +31,13 @@ pub struct FunctionDef {
     /// End line (1-based, inclusive)
     pub end_line: u32,
     /// Language of the source file
+    #[allow(dead_code)]
     pub language: String,
 }
 
 impl FunctionDef {
     /// Check if a given line (1-based) falls within this function's range
+    #[allow(dead_code)]
     pub fn contains_line(&self, line: u32) -> bool {
         line >= self.start_line && line <= self.end_line
     }
@@ -73,6 +75,7 @@ impl std::fmt::Display for RiskLevel {
 }
 
 impl RiskLevel {
+    #[allow(dead_code)]
     pub fn icon(&self) -> &str {
         match self {
             RiskLevel::High => "🔴",
@@ -84,6 +87,7 @@ impl RiskLevel {
 
 /// A function-level coupling result combining static analysis and temporal coupling
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct FunctionCoupling {
     pub function_name: String,
     pub file_path: String,
@@ -263,12 +267,10 @@ fn find_function_node<'a>(node: &Node<'a>, line: u32, language: &str) -> Option<
     }
 
     // If a child function was found, prefer it (innermost match)
-    child_result.or_else(|| {
-        if is_function {
-            Some(*node)
-        } else {
-            None
-        }
+    child_result.or(if is_function {
+        Some(*node)
+    } else {
+        None
     })
 }
 
@@ -556,6 +558,7 @@ fn collect_call_names_recursive<'a>(
 /// Analyze a specific function and compute function-level coupling.
 ///
 /// This is the main entry point for Phase 2 function-level analysis.
+#[allow(dead_code)]
 pub fn analyze_function_coupling(
     target_file: &str,
     target_line: u32,

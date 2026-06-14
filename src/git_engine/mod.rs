@@ -333,10 +333,10 @@ pub fn extract_diff_hunks(repo: &Repository, commit: &git2::Commit) -> Result<Ve
             if let Ok((hunk, _)) = patch.hunk(h) {
                 hunks.push(DiffHunk {
                     file_path: file_path.clone(),
-                    old_start: hunk.old_start() as u32,
-                    old_count: hunk.old_lines() as u32,
-                    new_start: hunk.new_start() as u32,
-                    new_count: hunk.new_lines() as u32,
+                    old_start: hunk.old_start(),
+                    old_count: hunk.old_lines(),
+                    new_start: hunk.new_start(),
+                    new_count: hunk.new_lines(),
                 });
             }
         }

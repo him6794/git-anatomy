@@ -17,13 +17,13 @@ use crossterm::{
 };
 use ratatui::{backend::CrosstermBackend, Terminal};
 use std::io;
-use std::path::PathBuf;
+use std::path::Path;
 
 use crate::db;
 use crate::git_engine;
 
 /// Launch the interactive TUI application.
-pub fn run_tui(repo_path: &PathBuf) -> Result<()> {
+pub fn run_tui(repo_path: &Path) -> Result<()> {
     // Setup terminal
     enable_raw_mode().context("Failed to enable raw mode")?;
     let mut stdout = io::stdout();
@@ -40,7 +40,7 @@ pub fn run_tui(repo_path: &PathBuf) -> Result<()> {
     database.ingest_commits(&commits)?;
 
     // Create app state
-    let mut app = app::App::new(database, repo_path.clone());
+    let mut app = app::App::new(database, repo_path.to_path_buf());
     app.load_data()?;
 
     // Run the TUI loop
