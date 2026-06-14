@@ -6,7 +6,7 @@ git-anatomy cross-references two signals — static code dependencies (from AST)
 
 [![crates.io](https://img.shields.io/crates/v/git-anatomy.svg)](https://crates.io/crates/v/git-anatomy)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![build](https://github.com/user/git-anatomy/actions/workflows/ci.yml/badge.svg)]()
+[![build](https://github.com/him6794/git-anatomy/actions/workflows/ci.yml/badge.svg)]()
 
 ---
 
@@ -37,7 +37,7 @@ cargo install git-anatomy
 Or build from source:
 
 ```bash
-git clone https://github.com/user/git-anatomy.git
+git clone https://github.com/him6794/git-anatomy.git
 cd git-anatomy
 cargo build --release
 ```

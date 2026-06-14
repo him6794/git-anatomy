@@ -7,7 +7,7 @@
 cargo install git-anatomy
 
 # From source
-git clone https://github.com/user/git-anatomy.git
+git clone https://github.com/him6794/git-anatomy.git
 cd git-anatomy
 cargo build --release
 # Binary at target/release/git-anatomy
